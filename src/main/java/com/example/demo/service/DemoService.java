@@ -4,6 +4,9 @@ import com.example.demo.dao.UserDao;
 import com.example.demo.domain.User;
 import com.example.demo.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +18,8 @@ public class DemoService {
 
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public String getDemo() {
         return "demo";
@@ -24,6 +29,7 @@ public class DemoService {
         return userDao.getAllUser();
     }
 
+    @Cacheable(value = "userCache", key = "#userSeq")
     public UserVO getUser(int userSeq) {
         return userDao.getUserBySeq(userSeq)
                 .orElseThrow(() -> new RuntimeException("Can't found user"));
@@ -31,8 +37,9 @@ public class DemoService {
 
     @Transactional
     public void addUser(User user) {
-        userDao.save(user.getUserVO());
-        throw new RuntimeException("Test Transactional");
+        UserVO userVO = user.getUserVO();
+        userVO.setPcode(passwordEncoder.encode(user.getPcode()));
+        userDao.save(userVO);
     }
 
     public void updateUserByDomain(User user) {
@@ -52,6 +59,7 @@ public class DemoService {
         userDao.update(userVO);
     }
 
+    @CacheEvict(value = "userCache", key = "#userSeq")
     public void deleteUser(int userSeq) {
         userDao.delete(userSeq);
     }

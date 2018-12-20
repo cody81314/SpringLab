@@ -4,6 +4,7 @@ import com.example.demo.vo.UserVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -21,21 +22,11 @@ public interface UserMapper {
     @Select("SELECT * FROM DEMO_USER WHERE USER_SEQ = #{userSeq}")
     UserVO getUser(int userSeq);
 
-    @Results(value = {
-            @Result(property = "userSeq", column = "USER_SEQ"),
-            @Result(property = "userCode", column = "USER_CODE"),
-            @Result(property = "pcode", column = "PCODE"),
-            @Result(property = "roleId", column = "ROLE_ID"),
-    })
+    @ResultMap("userResult")
     @Select("SELECT * FROM DEMO_USER WHERE USER_CODE = #{userCode}")
     UserVO getUserByUserCode(String userCode);
 
-    @Results({
-            @Result(property = "userSeq", column = "USER_SEQ"),
-            @Result(property = "userCode", column = "USER_CODE"),
-            @Result(property = "pcode", column = "PCODE"),
-            @Result(property = "roleId", column = "ROLE_ID"),
-    })
+    @ResultMap("userResult")
     @Select("SELECT * FROM DEMO_USER")
     List<UserVO> getAllUser();
 
