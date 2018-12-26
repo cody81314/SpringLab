@@ -13,6 +13,7 @@ public class User {
     public UserVO getUserVO() {
         UserVO vo = new UserVO();
         BeanUtils.copyProperties(this, vo, "userSeq");
+        vo.setRoleId("ROLE_" + this.getRoleId().toUpperCase());
 
         return vo;
     }
