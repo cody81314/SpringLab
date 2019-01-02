@@ -15,6 +15,6 @@
   * Lambda
   * Optional API
   * Stream API
-  * CompletableFuture
+  * **[CompletableFuture](https://popcornylu.gitbooks.io/java_multithread/content/async/cfuture.html)**
 11. Spring Boot 2
 12. Spring Transaction
